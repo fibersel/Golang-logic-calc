@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="resources/style.css">
+    <style>
+    body{
+        background-color:darkslategrey
+    }
+    </style>
+</head>
+<body>
+<div id="Header" style="font-family:'Courier New';
+    color:deepskyblue;
+    font-size: 20px">Boolean expr calc
+</div>
+<form action="javascript:void(null);" onsubmit="execExpr()">
+    <p><input style="background-color: gray; 
+        border: 0px; 
+        height: 30px;" 
+        id='expr' name="expr">
+    </p>
+</form>
+<p class="wrapper"><div class="btn-group optional">
+    <button class="button button1" onclick="append('(')">(</button>
+    <button class="button button1" onclick="append(')')">)</button>
+    <button class="button button1" onclick="append('=')">=</button>
+    <button class="button button1" onclick="append('¬')">¬</button>
+    <button class="button button1" onclick="append('•')">•</button>
+    <button class="button button1" onclick="append('∨')">∨</button>
+    <button class="button button1" onclick="append('⊕')">⊕</button>
+    <button class="button button1" onclick="append('→')">→</button>
+    <button class="button button1" onclick="append('↓')">↓</button>
+    <button class="button button1" onclick="append('|')">|</button>
+</div></p>
+
+<script>
+function append(str) {
+    document.getElementById('expr').value = document.getElementById('expr').value + str;
+}
+
+
+function execExpr() {
+    var xhr = new XMLHttpRequest();
+    var expr = document.getElementById('expr').value;
+
+    if(document.getElementById('newTable')){
+        document.getElementById('newTable').remove()
+    }
+
+    xhr.open('GET', 'http://localhost:8081/req?expr=' + expr, true);    
+    xhr.send();
+
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState != 4)
+            return;
+        
+
+        //parsing response
+        var ans = JSON.parse(xhr.responseText);
+        var header = ans["clms"];
+        var body = ans["table"];
+
+
+        //creating table
+        var table = document.createElement('table');
+        table.setAttribute('id', 'newTable');
+        table.setAttribute('class', 'newTable');
+        var tr = table.insertRow(-1);
+
+        //making header
+        header.push('Σ');
+        for(var h = 0; h < header.length;h++){
+            var th = document.createElement('th');
+            th.innerHTML = header[h];
+            tr.appendChild(th);
+        }
+
+
+        //making rows
+        for(var c = 0;c < body.length;c++){
+            tr = table.insertRow(-1);
+
+            for(var j = 0;j < body[c].length;j++){
+                var td = document.createElement('td');
+                td = tr.insertCell(-1);
+                td.innerHTML = body[c][j];
+            }
+        }
+        
+
+
+        document.body.appendChild(table)
+    }
+} 
+
+</script>
+</body>
+</html>
