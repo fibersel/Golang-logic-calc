@@ -10,3 +10,5 @@ https://golang-boolean-calc.herokuapp.com/
   x1 ∨ x2 • x3
   
   x1 ⊕ ¬x2 → x3
+
+  etc.
