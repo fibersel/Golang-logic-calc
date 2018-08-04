@@ -7,5 +7,4 @@ https://golang-boolean-calc.herokuapp.com/
 # Examples:
   x1 ⊕ x2
   
-  
   x1 ∨ x2 • x3
